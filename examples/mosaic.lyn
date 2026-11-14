@@ -1,0 +1,18 @@
+# LYN v0.7（仕様: LYN-spec.md）
+@color base=#ffffff main=#111111
+page (bg-c-base)
+  header (flex justify-between items-center h-14 px-6 bg-c-main text-c-base)
+    logo (text-xl font-bold) "ロゴ"  # ロゴ画像
+    nav (flex gap-6 text-xs) "HOME" "ABOUT" "NEWS" "ALBUM" "MORE ▾"
+  cover (w-full h-[50vh])  # カバー写真
+  main (w-[86%] mx-auto mt-10 flex flex-col gap-4)
+    heading (text-xl font-bold) "GRID VIEW"
+    grid (grid grid-cols-4 gap-1 max-md:grid-cols-2)
+      tile-large (relative col-span-2 row-span-2 aspect-square)
+        img (w-full h-full)
+        caption (absolute bottom-0 inset-x-0 p-3 flex gap-2 text-c-base): label (bg-c-main px-1 text-xs) "カテゴリ", date (text-xs)
+      tile*n (relative aspect-square)
+        img (w-full h-full)
+        caption (absolute bottom-0 inset-x-0 p-2 flex flex-col gap-1 text-c-base)
+          meta (flex gap-2): label (bg-c-main px-1 text-xs) "カテゴリ", date (text-xs)
+          title (text-xs font-bold) "記事タイトル（2行）"

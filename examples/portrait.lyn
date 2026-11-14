@@ -1,0 +1,14 @@
+# LYN v0.7（仕様: LYN-spec.md）
+@color base=#ffffff main=#333333
+page (flex flex-col items-center bg-c-base)
+  cover (relative w-full h-[40vh])  # カバー写真
+    menu-button (absolute top-3 right-3)  # ハンバーガー
+  profile (flex flex-col items-center gap-3)
+    site-icon (w-24 h-24) @over cover:bottom 50%
+    title (text-xl text-c-main) "サイト名"
+    text (text-sm) "ブログの説明文"
+  main (w-3/5 mt-8)
+    post*n (flex flex-col)
+      img (w-full aspect-[4/3])
+      title
+      text

@@ -1,0 +1,18 @@
+# LYN v0.7（仕様: LYN-spec.md）
+# 配色は例
+@color base=#1c2d35 main=#a78a5d accent=#5b686e
+@font Josefin Sans
+page (bg-c-base text-white)
+  header (flex justify-center items-center bg-white text-gray-500)
+    nav (flex gap-6) "HOME" "ABOUT" "CONTACT"
+    more-button  # ナビがはみ出したときの「もっと見る」
+  keyvisual (w-full)
+    cover (w-full)  # カバー写真
+    body (flex flex-col items-center)  # 不明：文字がカバーに重なるか、カバーの下に並ぶか
+      site-icon
+      title "サイト名"
+      text "キャッチコピー"
+  main (flex flex-col)
+    slot "本文"  # 固定ページの本文
+  footer (border-t border-[#3a404a])
+    text "Copyright"

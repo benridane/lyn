@@ -1,0 +1,24 @@
+# LYN v0.7（仕様: LYN-spec.md）
+@color base=#ffffff main=#333333
+page (w-[92%] mx-auto bg-c-base text-c-main)
+  header (flex flex-col items-center gap-6 py-8)
+    logo (text-3xl italic) "ロゴ"
+    nav (flex gap-8 text-xs) "HOME" "ABOUT" "NEWS" "ALBUM" "MORE ▾"  # HOMEに下線（現在地）
+  main (grid grid-cols-[2fr_1fr] gap-8 mt-12 max-md:grid-cols-1)
+    section (flex flex-col gap-4)
+      heading (text-lg) "MAGAZINE"
+      post*n (flex flex-col gap-3)
+        img (w-full aspect-[3/2])
+        title (text-lg) "記事タイトル（2行）"
+        text (text-xs) "抜粋"
+        date (text-xs)
+    aside (flex flex-col gap-8)
+      widget
+        heading (text-sm border-b) "記事一覧"
+        list
+          item*5 (flex gap-3 py-2)
+            thumb (w-1/4 aspect-square)
+            meta (flex flex-col gap-1): title (text-xs), date (text-xs)
+      widget
+        heading (text-sm border-b) "アーカイブ"
+        list > item*3 (py-2 text-xs border-b)

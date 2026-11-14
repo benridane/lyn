@@ -1,0 +1,34 @@
+# LYN v0.7（仕様: LYN-spec.md）
+@color base=#ffffff main=#f08000
+page (w-4/5 mx-auto bg-c-base)
+  header (flex justify-center items-center h-12)
+    nav (flex gap-6 text-xs) "HOME" "ABOUT" "MENU"
+  hero (relative aspect-[3/1])
+    cover (absolute right-0 w-[70%] h-full)  # カバー写真
+    title-box (absolute top-[6%] w-1/3 h-[70%] p-[3%] bg-c-main text-c-base) @over cover:left 10%
+      title (text-4xl) "サイト名"
+      divider (w-8 my-4)
+      text (text-xs) "キャッチコピー"
+  main (grid grid-cols-[2fr_1fr] gap-12 mt-12 max-md:grid-cols-1)
+    section (flex flex-col gap-12)
+      news (flex flex-col gap-4)
+        heading (text-c-main border-b) "NEWS"
+        list > item*3 (flex gap-4 py-2 border-b): date, title
+        button (self-center w-1/3 bg-c-main text-c-base) "VIEW ALL"
+      blog (flex flex-col gap-4)
+        heading (text-c-main border-b) "BLOG"
+        list
+          item*n (flex justify-between border-b)
+            meta (flex flex-col): date, title
+            thumb (w-1/4)
+    aside (flex flex-col gap-6)
+      search (border)
+      widget
+        heading (text-c-main) "記事一覧"
+        list > item*5 (border-b)
+      widget
+        heading (text-c-main) "カテゴリ"
+        tags (flex gap-2) > tag*2 (border)
+      profile-card (flex gap-2 border p-2)
+        img (w-16)
+        meta (flex flex-col): name "サイト名", text

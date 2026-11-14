@@ -1,0 +1,35 @@
+# LYN v0.7（仕様: LYN-spec.md）
+# 記事ページ。配色は例
+@color base=#1c2d35 main=#a78a5d accent=#5b686e
+@font Josefin Sans
+page (bg-c-base text-white)
+  header (flex justify-center items-center bg-white text-gray-500)  # トップページと共通
+    nav (flex gap-6) "HOME" "ABOUT" "CONTACT"
+    more-button
+  keyvisual (w-full)  # 不明：記事ページにカバー（キービジュアル）が表示されるか
+    cover (w-full)
+  main (flex flex-col)  # 不明：サイドバーが本文の右に並ぶか、下に並ぶか
+    article (flex flex-col)
+      slot "記事"  # タイトル・日付・カテゴリ・本文
+      share (flex gap-2) "Facebook" "X" "はてなブックマーク" "Pocket" "LINE"  # 丸いボタン
+      site-follow
+      related (flex flex-col)
+        heading "関連記事"
+        list > item*3
+      prev-next (flex justify-between)  # 画像あり
+        prev
+        next
+    aside (flex flex-col)
+      site-follow
+      widget
+        heading "記事一覧"
+        list > item*5
+      widget
+        heading "カテゴリ"
+        tags  # タグクラウド、件数表示あり
+      widget
+        heading "アーカイブ"
+        accordion
+      search
+  footer (border-t border-[#3a404a])  # トップページと共通
+    text "Copyright"

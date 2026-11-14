@@ -1,0 +1,34 @@
+# LYN v0.7（仕様: LYN-spec.md）
+@color base=#f2f2f2 main=#00787f accent=#f03c10
+page (bg-c-base)
+  header (flex justify-center items-center h-16 bg-c-main text-white)
+    logo (text-2xl font-bold) "サイト名"
+  nav (flex justify-center gap-8 h-10 items-center bg-white text-xs) "トップ" "新着記事" "人気記事" "今週のピックアップ" "お問い合わせ" "☰"
+  main (w-[92%] mx-auto grid grid-cols-[7fr_3fr] gap-6 mt-6 max-md:grid-cols-1)
+    section (flex flex-col gap-8)
+      news (flex flex-col gap-4 bg-white p-4)
+        heading (border-l-4 border-b pl-2) "新着記事"
+        cards (grid grid-cols-2 gap-4 max-md:grid-cols-1)
+          card*4 (relative aspect-[3/2])
+            img (w-full h-full)
+            label (absolute top-0 left-0 px-2 bg-c-accent text-white text-xs) "カテゴリ"
+            caption (absolute bottom-0 inset-x-0 p-2 text-white text-xs) "記事タイトル（2行）"  # 画像の上に文字。下側を暗く
+        button (self-center w-1/2 bg-black text-white) "もっと見る ›"
+      popular (flex flex-col gap-4 bg-white p-4)
+        heading (border-l-4 border-b pl-2) "人気記事"
+        list
+          item*n (flex gap-3)
+            thumb (w-1/4 aspect-[3/2])
+            title (text-sm)
+    aside (flex flex-col gap-6)
+      widget
+        heading (text-sm border-b) "記事一覧"
+        list
+          item*5 (flex gap-2 py-2)
+            thumb (w-1/4 aspect-square)
+            meta (flex flex-col gap-1): title (text-xs), date (text-xs)
+      widget
+        heading (text-sm border-b) "アーカイブ"
+        list > item*4 (py-2 text-xs border-b)
+      widget
+        heading (text-sm border-b) "カテゴリ"

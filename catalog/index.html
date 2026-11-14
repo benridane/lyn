@@ -1,0 +1,864 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>LYN テーマカタログ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@500;700&family=Noto+Sans+JP:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: 設計図をライトテーブルに並べる。画面の縮小図を主役に、説明は最小限 */
+:root {
+  --bg: #e9edf1;
+  --surface: #ffffff;
+  --well: #dfe4ea;
+  --ink: #16202a;
+  --muted: #5a6573;
+  --line: #cfd6de;
+  --accent: #2753b8;
+  --accent-ink: #ffffff;
+  --code-bg: #f4f6f8;
+  --font-display: "Zen Kaku Gothic New", "Hiragino Sans", "Noto Sans JP", sans-serif;
+  --font-body: "Noto Sans JP", "Hiragino Sans", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #10151b; --surface: #19212a; --well: #0b0f14; --ink: #e5eaf0; --muted: #96a2af;
+    --line: #2b3541; --accent: #85a5ff; --accent-ink: #0d1420; --code-bg: #121920; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #10151b; --surface: #19212a; --well: #0b0f14; --ink: #e5eaf0; --muted: #96a2af;
+  --line: #2b3541; --accent: #85a5ff; --accent-ink: #0d1420; --code-bg: #121920; color-scheme: dark;
+}
+body {
+  background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 15px; line-height: 1.6;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.wrap { max-width: 1240px; margin: 0 auto; padding-block: 40px 56px; }
+header.top { display: grid; gap: 10px; margin-bottom: 28px; }
+.eyebrow { font-family: var(--font-mono); font-size: 12px; letter-spacing: .08em; color: var(--muted); text-transform: uppercase; }
+h1 { font-family: var(--font-display); font-weight: 700; font-size: clamp(28px, 4vw, 40px); line-height: 1.2; margin: 0; text-wrap: balance; }
+.lead { margin: 0; color: var(--muted); max-width: 62ch; }
+.stats { display: flex; flex-wrap: wrap; gap: 6px 18px; font-family: var(--font-mono); font-size: 12.5px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.stats b { color: var(--ink); font-weight: 600; }
+
+.filters { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 22px; }
+.chip-btn {
+  font: 500 13px/1 var(--font-body); color: var(--ink); background: var(--surface); border: 1px solid var(--line);
+  border-radius: 999px; padding: 8px 14px; cursor: pointer;
+}
+.chip-btn[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.chip-btn:focus-visible, .seg button:focus-visible, .btn:focus-visible, .card-link:focus-visible, .close:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 22px; }
+.card { position: relative; display: grid; gap: 12px; }
+.shot { position: relative; aspect-ratio: 4 / 3; max-width: 100%; overflow: hidden; background: #fff; border: 1px solid var(--line); border-radius: 6px; }
+.shot iframe { position: absolute; top: 0; left: 0; border: 0; transform-origin: 0 0; pointer-events: none; background: #fff; }
+.card:hover .shot { border-color: var(--accent); }
+.meta { display: grid; gap: 6px; }
+.meta-row { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
+.name { font-family: var(--font-display); font-weight: 700; font-size: 18px; letter-spacing: .02em; }
+.page-kind { font-size: 12.5px; color: var(--muted); margin-left: 8px; font-weight: 500; font-family: var(--font-body); letter-spacing: 0; }
+.swatches { display: flex; gap: 4px; }
+.sw { width: 14px; height: 14px; border-radius: 3px; border: 1px solid rgba(127,127,127,.35); }
+.tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.tag { font-size: 12px; padding: 2px 9px; border-radius: 999px; background: var(--well); color: var(--ink); }
+.tag.none { color: var(--muted); background: transparent; border: 1px dashed var(--line); }
+.size { font-family: var(--font-mono); font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.card-link { position: absolute; inset: 0; border-radius: 6px; }
+.card-link span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+.empty { color: var(--muted); padding: 24px 0; }
+
+footer.note { margin-top: 40px; padding-top: 18px; border-top: 1px solid var(--line); font-size: 13px; color: var(--muted); display: grid; gap: 6px; max-width: 80ch; }
+footer.note a { color: var(--accent); }
+
+dialog {
+  width: min(1240px, calc(100vw - 32px)); max-height: calc(100dvh - 32px); padding: 0; border: 1px solid var(--line);
+  border-radius: 10px; background: var(--surface); color: var(--ink); overflow: auto;
+}
+dialog::backdrop { background: rgba(10, 14, 20, .55); }
+.d-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 16px 20px; border-bottom: 1px solid var(--line); position: sticky; top: 0; background: var(--surface); z-index: 2; }
+.d-title { font-family: var(--font-display); font-weight: 700; font-size: 20px; margin: 0; }
+.close { font: 500 14px var(--font-body); background: transparent; color: var(--ink); border: 1px solid var(--line); border-radius: 6px; padding: 6px 12px; cursor: pointer; }
+.d-body { display: grid; grid-template-columns: minmax(0, 1.65fr) minmax(0, 1fr); gap: 20px; padding: 20px; }
+@media (max-width: 860px) { .d-body { grid-template-columns: minmax(0, 1fr); } }
+.toolbar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 12px; }
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 7px; overflow: hidden; }
+.seg button { font: 500 13px var(--font-body); padding: 7px 12px; border: 0; background: var(--surface); color: var(--ink); cursor: pointer; }
+.seg button + button { border-left: 1px solid var(--line); }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
+.stage { background: var(--well); border-radius: 8px; padding: 14px; overflow: hidden; }
+.stage-frame { position: relative; margin: 0 auto; overflow: hidden; background: #fff; box-shadow: 0 1px 0 rgba(0,0,0,.06), 0 8px 24px rgba(0,0,0,.12); }
+.stage-frame iframe { position: absolute; top: 0; left: 0; border: 0; transform-origin: 0 0; background: #fff; }
+.side { display: grid; gap: 16px; align-content: start; min-width: 0; }
+.side h3 { font: 700 13px var(--font-body); margin: 0 0 6px; letter-spacing: .04em; color: var(--muted); }
+textarea#src {
+  width: 100%; min-height: 340px; box-sizing: border-box; resize: vertical; font: 12.5px/1.6 var(--font-mono);
+  color: var(--ink); background: var(--code-bg); border: 1px solid var(--line); border-radius: 6px; padding: 12px; tab-size: 2; white-space: pre; overflow: auto;
+}
+.row-btns { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-top: 8px; }
+.btn { font: 500 13px var(--font-body); padding: 7px 12px; border-radius: 6px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); cursor: pointer; }
+.btn.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.status { font-size: 12.5px; color: var(--muted); }
+.unknowns { margin: 0; padding-left: 1.1em; font-size: 13.5px; }
+.unknowns li + li { margin-top: 4px; }
+.info { font-size: 13.5px; color: var(--muted); margin: 0; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="eyebrow">LYN v0.7 · Layout patterns</div>
+    <h1>LYN テーマカタログ</h1>
+    <p class="lead">テーマの構造をLYN（レイアウト記法）で書き、そこから自動で描いた見取り図です。画像は使っていません。カードを開くとLYNを編集でき、図がその場で描き直されます。</p>
+    <div class="stats" id="stats"></div>
+  </header>
+
+  <div class="filters" id="filters" role="group" aria-label="特徴で絞り込む"></div>
+  <div class="grid" id="grid"></div>
+  <p class="empty" id="empty" hidden>この特徴を持つレイアウトはまだありません。</p>
+
+  <footer class="note">
+    <div>寸法はLYNに書かれていないため、一般的な値で補って描いています。配色はどれも例です。</div>
+    <div>LYNの仕様と、ここに載せたレイアウトのソースは、リポジトリの <code>LYN-spec.md</code> と <code>examples/</code> にあります。</div>
+  </footer>
+</div>
+
+<dialog id="detail" aria-labelledby="d-title">
+  <div class="d-head">
+    <h2 class="d-title" id="d-title"></h2>
+    <button class="close" id="close" type="button">閉じる</button>
+  </div>
+  <div class="d-body">
+    <div>
+      <div class="toolbar">
+        <div class="seg" role="group" aria-label="表示する幅">
+          <button type="button" id="w-pc" aria-pressed="true">PC 1280px</button>
+          <button type="button" id="w-sp" aria-pressed="false">スマホ 390px</button>
+        </div>
+        <div class="seg" role="group" aria-label="要素名">
+          <button type="button" id="names" aria-pressed="false">要素名を表示</button>
+        </div>
+      </div>
+      <div class="stage" id="stage"><div class="stage-frame" id="stage-frame"></div></div>
+    </div>
+    <div class="side">
+      <div>
+        <h3>LYN</h3>
+        <textarea id="src" spellcheck="false" aria-label="LYNのソース"></textarea>
+        <div class="row-btns">
+          <button class="btn primary" type="button" id="copy">コピー</button>
+          <button class="btn" type="button" id="reset">元に戻す</button>
+          <span class="status" id="status" aria-live="polite"></span>
+        </div>
+      </div>
+      <div id="features-box"><h3>特徴</h3><div class="tags" id="d-features"></div></div>
+      <div id="unknown-box"><h3>不明な点</h3><ul class="unknowns" id="d-unknowns"></ul></div>
+      <p class="info" id="d-note"></p>
+    </div>
+  </div>
+</dialog>
+
+<script type="text/plain" id="lyn-portrait">
+# LYN v0.7（仕様: LYN-spec.md）
+@color base=#ffffff main=#333333
+page (flex flex-col items-center bg-c-base)
+  cover (relative w-full h-[40vh])  # カバー写真
+    menu-button (absolute top-3 right-3)  # ハンバーガー
+  profile (flex flex-col items-center gap-3)
+    site-icon (w-24 h-24) @over cover:bottom 50%
+    title (text-xl text-c-main) "サイト名"
+    text (text-sm) "ブログの説明文"
+  main (w-3/5 mt-8)
+    post*n (flex flex-col)
+      img (w-full aspect-[4/3])
+      title
+      text
+</script>
+<script type="text/plain" id="lyn-signboard">
+# LYN v0.7（仕様: LYN-spec.md）
+@color base=#ffffff main=#f08000
+page (w-4/5 mx-auto bg-c-base)
+  header (flex justify-center items-center h-12)
+    nav (flex gap-6 text-xs) "HOME" "ABOUT" "MENU"
+  hero (relative aspect-[3/1])
+    cover (absolute right-0 w-[70%] h-full)  # カバー写真
+    title-box (absolute top-[6%] w-1/3 h-[70%] p-[3%] bg-c-main text-c-base) @over cover:left 10%
+      title (text-4xl) "サイト名"
+      divider (w-8 my-4)
+      text (text-xs) "キャッチコピー"
+  main (grid grid-cols-[2fr_1fr] gap-12 mt-12 max-md:grid-cols-1)
+    section (flex flex-col gap-12)
+      news (flex flex-col gap-4)
+        heading (text-c-main border-b) "NEWS"
+        list > item*3 (flex gap-4 py-2 border-b): date, title
+        button (self-center w-1/3 bg-c-main text-c-base) "VIEW ALL"
+      blog (flex flex-col gap-4)
+        heading (text-c-main border-b) "BLOG"
+        list
+          item*n (flex justify-between border-b)
+            meta (flex flex-col): date, title
+            thumb (w-1/4)
+    aside (flex flex-col gap-6)
+      search (border)
+      widget
+        heading (text-c-main) "記事一覧"
+        list > item*5 (border-b)
+      widget
+        heading (text-c-main) "カテゴリ"
+        tags (flex gap-2) > tag*2 (border)
+      profile-card (flex gap-2 border p-2)
+        img (w-16)
+        meta (flex flex-col): name "サイト名", text
+</script>
+<script type="text/plain" id="lyn-magazine">
+# LYN v0.7（仕様: LYN-spec.md）
+@color base=#ffffff main=#333333
+page (w-[92%] mx-auto bg-c-base text-c-main)
+  header (flex flex-col items-center gap-6 py-8)
+    logo (text-3xl italic) "ロゴ"
+    nav (flex gap-8 text-xs) "HOME" "ABOUT" "NEWS" "ALBUM" "MORE ▾"  # HOMEに下線（現在地）
+  main (grid grid-cols-[2fr_1fr] gap-8 mt-12 max-md:grid-cols-1)
+    section (flex flex-col gap-4)
+      heading (text-lg) "MAGAZINE"
+      post*n (flex flex-col gap-3)
+        img (w-full aspect-[3/2])
+        title (text-lg) "記事タイトル（2行）"
+        text (text-xs) "抜粋"
+        date (text-xs)
+    aside (flex flex-col gap-8)
+      widget
+        heading (text-sm border-b) "記事一覧"
+        list
+          item*5 (flex gap-3 py-2)
+            thumb (w-1/4 aspect-square)
+            meta (flex flex-col gap-1): title (text-xs), date (text-xs)
+      widget
+        heading (text-sm border-b) "アーカイブ"
+        list > item*3 (py-2 text-xs border-b)
+</script>
+<script type="text/plain" id="lyn-newsroom">
+# LYN v0.7（仕様: LYN-spec.md）
+@color base=#f2f2f2 main=#00787f accent=#f03c10
+page (bg-c-base)
+  header (flex justify-center items-center h-16 bg-c-main text-white)
+    logo (text-2xl font-bold) "サイト名"
+  nav (flex justify-center gap-8 h-10 items-center bg-white text-xs) "トップ" "新着記事" "人気記事" "今週のピックアップ" "お問い合わせ" "☰"
+  main (w-[92%] mx-auto grid grid-cols-[7fr_3fr] gap-6 mt-6 max-md:grid-cols-1)
+    section (flex flex-col gap-8)
+      news (flex flex-col gap-4 bg-white p-4)
+        heading (border-l-4 border-b pl-2) "新着記事"
+        cards (grid grid-cols-2 gap-4 max-md:grid-cols-1)
+          card*4 (relative aspect-[3/2])
+            img (w-full h-full)
+            label (absolute top-0 left-0 px-2 bg-c-accent text-white text-xs) "カテゴリ"
+            caption (absolute bottom-0 inset-x-0 p-2 text-white text-xs) "記事タイトル（2行）"  # 画像の上に文字。下側を暗く
+        button (self-center w-1/2 bg-black text-white) "もっと見る ›"
+      popular (flex flex-col gap-4 bg-white p-4)
+        heading (border-l-4 border-b pl-2) "人気記事"
+        list
+          item*n (flex gap-3)
+            thumb (w-1/4 aspect-[3/2])
+            title (text-sm)
+    aside (flex flex-col gap-6)
+      widget
+        heading (text-sm border-b) "記事一覧"
+        list
+          item*5 (flex gap-2 py-2)
+            thumb (w-1/4 aspect-square)
+            meta (flex flex-col gap-1): title (text-xs), date (text-xs)
+      widget
+        heading (text-sm border-b) "アーカイブ"
+        list > item*4 (py-2 text-xs border-b)
+      widget
+        heading (text-sm border-b) "カテゴリ"
+</script>
+<script type="text/plain" id="lyn-mosaic">
+# LYN v0.7（仕様: LYN-spec.md）
+@color base=#ffffff main=#111111
+page (bg-c-base)
+  header (flex justify-between items-center h-14 px-6 bg-c-main text-c-base)
+    logo (text-xl font-bold) "ロゴ"  # ロゴ画像
+    nav (flex gap-6 text-xs) "HOME" "ABOUT" "NEWS" "ALBUM" "MORE ▾"
+  cover (w-full h-[50vh])  # カバー写真
+  main (w-[86%] mx-auto mt-10 flex flex-col gap-4)
+    heading (text-xl font-bold) "GRID VIEW"
+    grid (grid grid-cols-4 gap-1 max-md:grid-cols-2)
+      tile-large (relative col-span-2 row-span-2 aspect-square)
+        img (w-full h-full)
+        caption (absolute bottom-0 inset-x-0 p-3 flex gap-2 text-c-base): label (bg-c-main px-1 text-xs) "カテゴリ", date (text-xs)
+      tile*n (relative aspect-square)
+        img (w-full h-full)
+        caption (absolute bottom-0 inset-x-0 p-2 flex flex-col gap-1 text-c-base)
+          meta (flex gap-2): label (bg-c-main px-1 text-xs) "カテゴリ", date (text-xs)
+          title (text-xs font-bold) "記事タイトル（2行）"
+</script>
+<script type="text/plain" id="lyn-nocturne">
+# LYN v0.7（仕様: LYN-spec.md）
+# 配色は例
+@color base=#1c2d35 main=#a78a5d accent=#5b686e
+@font Josefin Sans
+page (bg-c-base text-white)
+  header (flex justify-center items-center bg-white text-gray-500)
+    nav (flex gap-6) "HOME" "ABOUT" "CONTACT"
+    more-button  # ナビがはみ出したときの「もっと見る」
+  keyvisual (w-full)
+    cover (w-full)  # カバー写真
+    body (flex flex-col items-center)  # 不明：文字がカバーに重なるか、カバーの下に並ぶか
+      site-icon
+      title "サイト名"
+      text "キャッチコピー"
+  main (flex flex-col)
+    slot "本文"  # 固定ページの本文
+  footer (border-t border-[#3a404a])
+    text "Copyright"
+</script>
+<script type="text/plain" id="lyn-nocturne-post">
+# LYN v0.7（仕様: LYN-spec.md）
+# 記事ページ。配色は例
+@color base=#1c2d35 main=#a78a5d accent=#5b686e
+@font Josefin Sans
+page (bg-c-base text-white)
+  header (flex justify-center items-center bg-white text-gray-500)  # トップページと共通
+    nav (flex gap-6) "HOME" "ABOUT" "CONTACT"
+    more-button
+  keyvisual (w-full)  # 不明：記事ページにカバー（キービジュアル）が表示されるか
+    cover (w-full)
+  main (flex flex-col)  # 不明：サイドバーが本文の右に並ぶか、下に並ぶか
+    article (flex flex-col)
+      slot "記事"  # タイトル・日付・カテゴリ・本文
+      share (flex gap-2) "Facebook" "X" "はてなブックマーク" "Pocket" "LINE"  # 丸いボタン
+      site-follow
+      related (flex flex-col)
+        heading "関連記事"
+        list > item*3
+      prev-next (flex justify-between)  # 画像あり
+        prev
+        next
+    aside (flex flex-col)
+      site-follow
+      widget
+        heading "記事一覧"
+        list > item*5
+      widget
+        heading "カテゴリ"
+        tags  # タグクラウド、件数表示あり
+      widget
+        heading "アーカイブ"
+        accordion
+      search
+  footer (border-t border-[#3a404a])  # トップページと共通
+    text "Copyright"
+</script>
+
+<script>
+/* ---------- LYN パーサー ---------- */
+function topIndex(str, test) {
+  let q = false, p = 0, b = 0;
+  for (let i = 0; i < str.length; i++) {
+    const c = str[i];
+    if (q) { if (c === '"') q = false; continue; }
+    if (c === '"') { q = true; continue; }
+    if (c === '(') p++; else if (c === ')') p--;
+    else if (c === '[') b++; else if (c === ']') b--;
+    else if (p === 0 && b === 0 && test(str, i)) return i;
+  }
+  return -1;
+}
+function splitTop(str, test) {
+  const out = []; let rest = str, i;
+  while ((i = topIndex(rest, test)) >= 0) { out.push(rest.slice(0, i)); rest = rest.slice(i + 1); }
+  out.push(rest);
+  return out;
+}
+const isComment = (s, i) => s[i] === '#' && (i === 0 || /\s/.test(s[i - 1]));
+const isChain = (s, i) => s[i] === '>' && s[i - 1] === ' ' && s[i + 1] === ' ';
+const isColon = (s, i) => s[i] === ':';
+const isComma = (s, i) => s[i] === ',';
+
+function takeOver(s) {
+  const m = s.match(/@over\s+([\w-]+):(top|bottom|left|right)\s+(\d+(?:\.\d+)?)%/);
+  if (!m) return { s, over: null };
+  return { s: (s.slice(0, m.index) + s.slice(m.index + m[0].length)).trim(), over: { t: m[1], side: m[2], amt: +m[3] } };
+}
+function parseEl(str, over) {
+  str = str.trim();
+  const m = str.match(/^([\w-]+)(?:\*(\d+|n))?/);
+  if (!m) return null;
+  const rep = m[2] === 'n' ? 3 : (m[2] ? Math.min(+m[2], 24) : 1);
+  let rest = str.slice(m[0].length).trim(), cls = [];
+  if (rest.startsWith('(')) {
+    let d = 0, j = 0;
+    for (; j < rest.length; j++) { if (rest[j] === '(') d++; else if (rest[j] === ')') { d--; if (d === 0) break; } }
+    cls = rest.slice(1, j).trim().split(/\s+/).filter(Boolean);
+    rest = rest.slice(j + 1).trim();
+  }
+  const texts = [...rest.matchAll(/"([^"]*)"/g)].map(x => x[1]);
+  return { name: m[1], rep, cls, texts, over, kids: [] };
+}
+function parseSpec(str) {
+  const parts = splitTop(str, isChain).map(s => s.trim()).filter(Boolean);
+  let head = null, tail = null;
+  for (const raw of parts) {
+    const { s, over } = takeOver(raw);
+    const ci = topIndex(s, isColon);
+    const el = parseEl(ci >= 0 ? s.slice(0, ci) : s, over);
+    if (!el) continue;
+    if (ci >= 0) {
+      for (const c of splitTop(s.slice(ci + 1), isComma)) {
+        if (!c.trim()) continue;
+        const k = parseSpec(c);
+        if (k) el.kids.push(k.head);
+      }
+    }
+    if (!head) head = el; else tail.kids.push(el);
+    tail = el;
+  }
+  return head ? { head, tail } : null;
+}
+function parseLyn(src) {
+  const meta = { colors: {}, font: '', unknown: [] };
+  const root = { kids: [] };
+  const stack = [{ node: root, ind: -1 }];
+  for (const raw of src.split(/\r?\n/)) {
+    if (!raw.trim()) continue;
+    const ind = raw.match(/^ */)[0].length;
+    const line = raw.trim();
+    const ci = topIndex(line, isComment);
+    const code = (ci >= 0 ? line.slice(0, ci) : line).trim();
+    const comment = ci >= 0 ? line.slice(ci + 1).trim() : '';
+    const um = comment.match(/不明[：:]\s*(.+)/);
+    if (um) meta.unknown.push(um[1]);
+    if (!code) continue;
+    if (code.startsWith('@color')) {
+      for (const m of code.matchAll(/(base|main|accent)=(#[0-9a-fA-F]{3,8})\b/g)) meta.colors[m[1]] = m[2];
+      continue;
+    }
+    if (code.startsWith('@font')) { meta.font = code.slice(5).trim().replace(/[^\w\s-]/g, ''); continue; }
+    const sp = parseSpec(code);
+    if (!sp) continue;
+    while (stack.length > 1 && stack[stack.length - 1].ind >= ind) stack.pop();
+    stack[stack.length - 1].node.kids.push(sp.head);
+    stack.push({ node: sp.tail, ind });
+  }
+  return { meta, root };
+}
+
+/* ---------- LYN → HTML（ワイヤーフレーム） ---------- */
+const IMG = new Set(['cover', 'img', 'image', 'thumb', 'thumbnail', 'icon', 'site-icon', 'logo', 'photo', 'avatar']);
+const TXT = { title: 'text-2xl font-bold', heading: 'font-bold', text: '', date: 'text-xs opacity-70', link: '', label: 'text-xs', caption: 'text-sm', name: 'font-bold', price: 'font-bold' };
+const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const bare = c => c.replace(/^(?:[\w-]+:)+/, '');
+const has = (cls, re) => cls.some(c => re.test(bare(c)));
+
+function render(ast, vh) {
+  const cl = cls => cls
+    .filter(c => /^[-\w:\[\]\/.%#_,!]+$/.test(c))
+    .map(c => c.replace(/\[(\d+(?:\.\d+)?)vh\]/g, (m, v) => '[' + Math.round(v * vh / 100) + 'px]'))
+    .join(' ');
+  function one(n, i) {
+    const cls = [...n.cls], kids = n.kids, texts = n.texts, name = n.name;
+    let attrs = ` data-n="${esc(name)}" data-i="${i}"`;
+    if (n.over) attrs += ` data-over="${esc(n.over.t)}|${n.over.side}|${n.over.amt}"`;
+    if (name === 'slot') return `<div class="lyn-slot ${cl(cls)}"${attrs}><span>${esc(texts[0] || 'slot')}</span></div>`;
+    if (name === 'divider') return `<hr class="${cl(cls)}"${attrs}>`;
+    if (name === 'input' || name === 'search') return `<div class="lyn-input ${cl(cls)}"${attrs}>${esc(texts[0] || (name === 'search' ? '検索' : ''))}</div>`;
+    if (name === 'menu-button') return `<div class="lyn-menu ${cl(cls)}"${attrs}>☰</div>`;
+    let inner = '';
+    if (texts.length === 1) inner += kids.length ? `<span>${esc(texts[0])}</span>` : esc(texts[0]);
+    if (texts.length > 1) inner += texts.map(t => `<span class="${name === 'nav' ? 'lyn-navitem' : 'lyn-chip'}">${esc(t)}</span>`).join('');
+    inner += kids.map(k => many(k)).join('');
+    const isImg = IMG.has(name) && !texts.length;
+    if (isImg) {
+      cls.unshift('lyn-ph');
+      const small = /icon|logo|avatar/.test(name);
+      if (small) cls.splice(1, 0, 'lyn-ph-s');
+      if (small && !has(cls, /^w-/)) cls.push('w-16');
+      if (!has(cls, /^(h-|aspect-)/)) cls.push(name === 'cover' ? `h-[${Math.round(vh * .45)}px]` : (name === 'thumb' || small) ? 'aspect-square' : 'aspect-video');
+    } else if (!kids.length && !texts.length) {
+      if (name in TXT) inner = `<span class="lyn-bar" style="width:${name === 'title' ? 60 : name === 'date' ? 28 : 78}%"></span>`;
+      else { cls.unshift('lyn-leaf'); inner = '<span class="lyn-bar"></span>'; }
+    }
+    if (name in TXT && TXT[name] && !has(cls, /^text-(xs|sm|base|lg|\dxl|\[)/)) cls.push(...TXT[name].split(' '));
+    if (name === 'button') cls.unshift('lyn-button');
+    if ((name === 'header' || name === 'footer') && !has(cls, /^p[xytblr]?-/)) cls.push('px-6', 'py-4');
+    if (name === 'item' && !has(cls, /^p[ytb]?-/)) cls.push('py-2');
+    if (has(cls, /^(flex|grid)$/) && !has(cls, /^gap/)) cls.push('gap-3');
+    return `<div class="${cl(cls)}"${attrs}>${inner}</div>`;
+  }
+  function many(n) { let s = ''; for (let i = 0; i < n.rep; i++) s += one(n, i); return s; }
+  return ast.root.kids.map(many).join('');
+}
+
+const FRAME_JS = `(function(){
+var NAMES=document.body.classList.contains('names');
+function all(sel){return Array.prototype.slice.call(document.querySelectorAll(sel));}
+function place(){
+  var els=all('[data-over]');
+  els.forEach(function(el){el.style.marginTop='';el.style.marginLeft='';el.style.top='';el.style.left='';el.style.zIndex='';el.style.position='';});
+  els.forEach(function(el){
+    var p=el.getAttribute('data-over').split('|'),a=parseFloat(p[2])/100;
+    var t=all('[data-n]').filter(function(x){return x.getAttribute('data-n')===p[0]&&x!==el&&!x.contains(el)&&!el.contains(x);})[0];
+    if(!t)return;
+    var E=el.getBoundingClientRect(),T=t.getBoundingClientRect(),dx=0,dy=0;
+    if(p[1]==='bottom')dy=(T.bottom-a*E.height)-E.top;
+    else if(p[1]==='top')dy=(T.top+a*E.height)-E.bottom;
+    else if(p[1]==='left')dx=(T.left+a*E.width)-E.right;
+    else if(p[1]==='right')dx=(T.right-a*E.width)-E.left;
+    var cs=getComputedStyle(el);
+    if(cs.position==='absolute'||cs.position==='fixed'){
+      if(dx)el.style.left=(el.offsetLeft+dx)+'px';
+      if(dy)el.style.top=(el.offsetTop+dy)+'px';
+    }else{
+      if(cs.position==='static')el.style.position='relative';
+      if(dy)el.style.marginTop=(parseFloat(cs.marginTop)+dy)+'px';
+      if(dx)el.style.marginLeft=(parseFloat(cs.marginLeft)+dx)+'px';
+    }
+    el.style.zIndex='10';
+  });
+}
+function labels(){
+  var old=document.getElementById('lyn-labels');if(old)old.remove();
+  if(!NAMES)return;
+  var box=document.createElement('div');box.id='lyn-labels';var seen={};
+  all('[data-n]').forEach(function(el){
+    if(el.getAttribute('data-i')!=='0')return;
+    var r=el.getBoundingClientRect();if(r.width<6||r.height<6)return;
+    var x=Math.round(r.left+scrollX),y=Math.round(r.top+scrollY),k=Math.round(x/6)+':'+Math.round(y/6);
+    var n=seen[k]||0;seen[k]=n+1;
+    var s=document.createElement('span');s.textContent=el.getAttribute('data-n');
+    s.style.left=x+'px';s.style.top=(y+n*14)+'px';box.appendChild(s);
+  });
+  document.body.appendChild(box);
+}
+function run(){place();labels();parent.postMessage({lyn:'h',h:Math.ceil(document.documentElement.scrollHeight)},'*');}
+[80,350,900,1800].forEach(function(t){setTimeout(run,t);});
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(run);
+})();`;
+
+/* ---------- LYNで使うTailwindクラス → CSS（外部スクリプトなし） ---------- */
+const GRAY = { 50: '#f9fafb', 100: '#f3f4f6', 200: '#e5e7eb', 300: '#d1d5db', 400: '#9ca3af', 500: '#6b7280', 600: '#4b5563', 700: '#374151', 800: '#1f2937', 900: '#111827', 950: '#030712' };
+const TEXT_SIZE = { xs: '.75rem;line-height:1rem', sm: '.875rem;line-height:1.25rem', base: '1rem;line-height:1.5rem', lg: '1.125rem;line-height:1.75rem', xl: '1.25rem;line-height:1.75rem', '2xl': '1.5rem;line-height:2rem', '3xl': '1.875rem;line-height:2.25rem', '4xl': '2.25rem;line-height:2.5rem', '5xl': '3rem;line-height:1', '6xl': '3.75rem;line-height:1' };
+const MAX_W = { xs: '20rem', sm: '24rem', md: '28rem', lg: '32rem', xl: '36rem', '2xl': '42rem', '3xl': '48rem', '4xl': '56rem', '5xl': '64rem', '6xl': '72rem', '7xl': '80rem', full: '100%', none: 'none' };
+const ALIGN = { start: 'flex-start', end: 'flex-end', center: 'center', between: 'space-between', around: 'space-around', evenly: 'space-evenly', stretch: 'stretch', baseline: 'baseline', auto: 'auto' };
+const FIXED = {
+  flex: 'display:flex', 'inline-flex': 'display:inline-flex', grid: 'display:grid', block: 'display:block', 'inline-block': 'display:inline-block', hidden: 'display:none',
+  'flex-col': 'flex-direction:column', 'flex-row': 'flex-direction:row', 'flex-wrap': 'flex-wrap:wrap', 'flex-1': 'flex:1 1 0%', 'shrink-0': 'flex-shrink:0', grow: 'flex-grow:1',
+  absolute: 'position:absolute', relative: 'position:relative', sticky: 'position:sticky', fixed: 'position:fixed', static: 'position:static',
+  'mx-auto': 'margin-left:auto;margin-right:auto', 'overflow-hidden': 'overflow:hidden', 'object-cover': 'object-fit:cover',
+  'font-bold': 'font-weight:700', 'font-semibold': 'font-weight:600', 'font-medium': 'font-weight:500', 'font-normal': 'font-weight:400',
+  italic: 'font-style:italic', uppercase: 'text-transform:uppercase', 'text-left': 'text-align:left', 'text-center': 'text-align:center', 'text-right': 'text-align:right',
+  'tracking-wide': 'letter-spacing:.025em', 'tracking-wider': 'letter-spacing:.05em', 'tracking-widest': 'letter-spacing:.1em',
+  'leading-none': 'line-height:1', 'leading-tight': 'line-height:1.25', 'leading-relaxed': 'line-height:1.625',
+  rounded: 'border-radius:.25rem', 'rounded-md': 'border-radius:.375rem', 'rounded-lg': 'border-radius:.5rem', 'rounded-full': 'border-radius:9999px',
+  'aspect-square': 'aspect-ratio:1/1', 'aspect-video': 'aspect-ratio:16/9',
+  border: 'border-width:1px', 'border-0': 'border-width:0', 'border-2': 'border-width:2px', 'border-4': 'border-width:4px',
+  'whitespace-nowrap': 'white-space:nowrap', 'col-span-full': 'grid-column:1/-1'
+};
+const MEDIA = { 'max-sm': '(max-width:639.98px)', 'max-md': '(max-width:767.98px)', 'max-lg': '(max-width:1023.98px)', sm: '(min-width:640px)', md: '(min-width:768px)', lg: '(min-width:1024px)', xl: '(min-width:1280px)' };
+
+function spacing(v, kind) {
+  if (v === 'px') return '1px';
+  if (v === 'full') return '100%';
+  if (v === 'auto') return 'auto';
+  if (v === 'screen') return kind === 'h' ? '100vh' : '100vw';
+  if (/^\d+(\.\d+)?$/.test(v)) return (+v * 0.25) + 'rem';
+  if (/^\d+\/\d+$/.test(v)) { const [a, b] = v.split('/'); return +(a / b * 100).toFixed(4) + '%'; }
+  if (/^\[[^\]]+\]$/.test(v)) return v.slice(1, -1).replace(/_/g, ' ');
+  return null;
+}
+function color(v) {
+  let alpha = null;
+  const m = v.match(/^(.+)\/(\d+)$/);
+  if (m) { v = m[1]; alpha = +m[2]; }
+  let c = null;
+  if (v === 'white') c = '#ffffff'; else if (v === 'black') c = '#000000';
+  else if (v === 'transparent') c = 'transparent'; else if (v === 'current') c = 'currentColor';
+  else if (/^c-(base|main|accent)$/.test(v)) c = `var(--${v})`;
+  else if (/^\[#[0-9a-fA-F]{3,8}\]$/.test(v)) c = v.slice(1, -1);
+  else { const g = v.match(/^(gray|slate|zinc|neutral|stone)-(\d+)$/); if (g && GRAY[g[2]]) c = GRAY[g[2]]; }
+  if (!c) return null;
+  return alpha === null ? c : `color-mix(in srgb, ${c} ${alpha}%, transparent)`;
+}
+const SIDES = { t: ['top'], b: ['bottom'], l: ['left'], r: ['right'], x: ['left', 'right'], y: ['top', 'bottom'], '': [''] };
+function decls(t) {
+  let neg = false;
+  if (t.startsWith('-')) { neg = true; t = t.slice(1); }
+  const N = v => (neg && v && v !== 'auto' ? `calc(${v} * -1)` : v);
+  if (FIXED[t] && !neg) return FIXED[t];
+  let m;
+  if ((m = t.match(/^justify-(\w+)$/)) && ALIGN[m[1]]) return `justify-content:${ALIGN[m[1]]}`;
+  if ((m = t.match(/^items-(\w+)$/)) && ALIGN[m[1]]) return `align-items:${ALIGN[m[1]]}`;
+  if ((m = t.match(/^self-(\w+)$/)) && ALIGN[m[1]]) return `align-self:${ALIGN[m[1]]}`;
+  if ((m = t.match(/^grid-cols-(\d+)$/))) return `grid-template-columns:repeat(${m[1]},minmax(0,1fr))`;
+  if ((m = t.match(/^grid-cols-\[(.+)\]$/))) return `grid-template-columns:${m[1].replace(/_/g, ' ')}`;
+  if ((m = t.match(/^(col|row)-span-(\d+)$/))) return `grid-${m[1] === 'col' ? 'column' : 'row'}:span ${m[2]}/span ${m[2]}`;
+  if ((m = t.match(/^aspect-\[(\d+(?:\.\d+)?)\/(\d+(?:\.\d+)?)\]$/))) return `aspect-ratio:${m[1]}/${m[2]}`;
+  if ((m = t.match(/^opacity-(\d+)$/))) return `opacity:${m[1] / 100}`;
+  if ((m = t.match(/^z-(\d+)$/))) return `z-index:${m[1]}`;
+  if ((m = t.match(/^border-([tblrxy])(?:-(\d+))?$/))) return SIDES[m[1]].map(s => `border-${s}-width:${m[2] || 1}px`).join(';');
+  if ((m = t.match(/^border-(.+)$/))) { const c = color(m[1]); return c ? `border-color:${c}` : null; }
+  if ((m = t.match(/^bg-(.+)$/))) { const c = color(m[1]); return c ? `background-color:${c}` : null; }
+  if ((m = t.match(/^text-(.+)$/))) {
+    if (TEXT_SIZE[m[1]]) return `font-size:${TEXT_SIZE[m[1]]}`;
+    if (/^\[\d+(\.\d+)?(px|rem|em)\]$/.test(m[1])) return `font-size:${m[1].slice(1, -1)}`;
+    const c = color(m[1]); return c ? `color:${c}` : null;
+  }
+  if ((m = t.match(/^([pm])([xytblr]?)-(.+)$/))) {
+    const v = spacing(m[3]); if (!v) return null;
+    const prop = m[1] === 'p' ? 'padding' : 'margin';
+    if (m[1] === 'p' && neg) return null;
+    return SIDES[m[2]].map(s => `${prop}${s ? '-' + s : ''}:${N(v)}`).join(';');
+  }
+  if ((m = t.match(/^gap-(?:([xy])-)?(.+)$/))) { const v = spacing(m[2]); if (!v) return null; return m[1] ? `${m[1] === 'x' ? 'column' : 'row'}-gap:${v}` : `gap:${v}`; }
+  if ((m = t.match(/^max-w-(.+)$/))) { const v = MAX_W[m[1]] || spacing(m[1]); return v ? `max-width:${v}` : null; }
+  if ((m = t.match(/^(w|h|min-w|min-h|max-h)-(.+)$/))) {
+    const kind = m[1].endsWith('h') ? 'h' : 'w';
+    const v = spacing(m[2], kind); if (!v) return null;
+    const prop = { w: 'width', h: 'height', 'min-w': 'min-width', 'min-h': 'min-height', 'max-h': 'max-height' }[m[1]];
+    return `${prop}:${v}`;
+  }
+  if ((m = t.match(/^inset(?:-([xy]))?-(.+)$/))) { const v = spacing(m[2]); if (!v) return null; return (m[1] ? SIDES[m[1]] : ['top', 'right', 'bottom', 'left']).map(s => `${s}:${N(v)}`).join(';'); }
+  if ((m = t.match(/^(top|right|bottom|left)-(.+)$/))) { const v = spacing(m[2]); return v ? `${m[1]}:${N(v)}` : null; }
+  return null;
+}
+function cssFor(tokens) {
+  let base = '', media = '';
+  for (const tok of tokens) {
+    let t = tok, mq = [], skip = false, m;
+    while ((m = t.match(/^([a-z-]+):(?=.)/)) && !t.startsWith('[')) {
+      if (MEDIA[m[1]]) mq.push(MEDIA[m[1]]); else skip = true;
+      t = t.slice(m[0].length);
+    }
+    if (skip) continue;
+    const d = decls(t);
+    if (!d) continue;
+    const rule = `.${CSS.escape(tok)}{${d}}`;
+    if (mq.length) media += `@media ${mq.join(' and ')}{${rule}}`; else base += rule;
+  }
+  return base + media;
+}
+
+function frameDoc(src, { vh = 960, names = false } = {}) {
+  const ast = parseLyn(src);
+  const c = ast.meta.colors;
+  const font = ast.meta.font;
+  const fontLink = font ? `<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=${encodeURIComponent(font).replace(/%20/g, '+')}:wght@400;700&display=swap">` : '';
+  const family = font ? `'${font}', ` : '';
+  const body = render(ast, vh);
+  const tokens = new Set();
+  for (const m of body.matchAll(/class="([^"]*)"/g)) for (const t of m[1].split(/\s+/)) if (t) tokens.add(t);
+  const close = '<' + '/script>';
+  return `<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">${fontLink}
+<style>
+:root{--c-base:${c.base || '#ffffff'};--c-main:${c.main || '#333333'};--c-accent:${c.accent || c.main || '#555555'}}
+*,::before,::after{box-sizing:border-box;border:0 solid rgba(127,127,127,.38)}
+body{margin:0;font-family:${family}"Hiragino Sans","Noto Sans JP",system-ui,sans-serif;color:#1f2329;background:#fff;line-height:1.5;-webkit-font-smoothing:antialiased}
+hr{height:0;margin:0;border-top-width:1px;color:inherit}
+.lyn-ph{background:#c4c9d0}
+.lyn-ph-s{background:#8f98a3;box-shadow:0 0 0 3px #fff}
+.lyn-bar{display:block;height:8px;border-radius:4px;background:currentColor;opacity:.2;width:70%}
+.lyn-leaf{border:1px dashed rgba(127,127,127,.5);border-radius:4px;min-height:2rem;padding:10px}
+.lyn-slot{display:flex;align-items:center;justify-content:center;min-height:14rem;border:1.5px dashed rgba(127,127,127,.6);font-size:15px;opacity:.85;background:repeating-linear-gradient(45deg,rgba(127,127,127,.09) 0 8px,transparent 8px 16px)}
+.lyn-input{display:flex;align-items:center;height:36px;padding:0 10px;border:1px solid rgba(127,127,127,.5);font-size:13px;opacity:.75}
+.lyn-button{display:inline-flex;align-items:center;justify-content:center;padding:8px 16px;border:1px solid currentColor;font-size:13px}
+.lyn-chip{display:inline-flex;align-items:center;padding:3px 10px;border:1px solid currentColor;border-radius:999px;font-size:12px;opacity:.85}
+.lyn-menu{font-size:20px;line-height:1}
+${cssFor(tokens)}
+.names [data-n]{outline:1px solid rgba(39,83,184,.55);outline-offset:-1px}
+#lyn-labels{position:absolute;top:0;left:0;pointer-events:none;z-index:9999}
+#lyn-labels span{position:absolute;font:600 11px/14px ui-monospace,Menlo,monospace;background:rgba(39,83,184,.92);color:#fff;padding:0 4px;white-space:nowrap}
+</style></head><body class="${names ? 'names' : ''}">${body}<script>${FRAME_JS}${close}</body></html>`;
+}
+
+/* ---------- カタログ ---------- */
+const THEMES = [
+  { id: 'portrait', name: 'Portrait', page: 'トップ', features: ['サイトアイコン', 'カバー写真', '重なり'] },
+  { id: 'signboard', name: 'Signboard', page: 'トップ', features: ['カバー写真', 'サイドバー', '重なり'] },
+  { id: 'magazine', name: 'Magazine', page: 'トップ', features: ['サイドバー'] },
+  { id: 'newsroom', name: 'Newsroom', page: 'トップ', features: ['サイドバー'] },
+  { id: 'mosaic', name: 'Mosaic', page: 'トップ', features: ['ロゴ画像', 'カバー写真'] },
+  { id: 'nocturne', name: 'Nocturne', page: 'トップ', features: ['サイトアイコン', 'カバー写真'] },
+  { id: 'nocturne-post', name: 'Nocturne', page: '記事ページ', features: ['サイドバー'], note: 'サイドバーの位置（本文の右か下か）は決めていないため、本文の下に並べています。' },
+];
+const ALL_FEATURES = ['サイトアイコン', 'カバー写真', 'ロゴ画像', 'サイドバー', '重なり'];
+for (const t of THEMES) {
+  t.src = document.getElementById('lyn-' + t.id).textContent.replace(/^\n/, '');
+  t.ast = parseLyn(t.src);
+}
+
+const grid = document.getElementById('grid');
+const fmt = n => n.toLocaleString('ja-JP');
+
+function stats() {
+  const total = THEMES.reduce((a, t) => a + t.src.length, 0);
+  const themes = new Set(THEMES.map(t => t.name)).size;
+  document.getElementById('stats').innerHTML =
+    `<span><b>${THEMES.length}</b> レイアウト</span><span><b>${themes}</b> テーマ</span><span>LYN 平均 <b>${fmt(Math.round(total / THEMES.length))}</b> 字</span><span>画像 <b>0</b> 枚</span>`;
+}
+
+const thumbObserver = new ResizeObserver(entries => {
+  for (const e of entries) {
+    const f = e.target.querySelector('iframe');
+    if (f) f.style.transform = `scale(${e.target.clientWidth / 1280})`;
+  }
+});
+
+function card(t) {
+  const el = document.createElement('article');
+  el.className = 'card';
+  el.dataset.features = t.features.join(',');
+  const c = t.ast.meta.colors;
+  const sw = ['base', 'main', 'accent'].filter(k => c[k]).map(k => `<span class="sw" style="background:${c[k]}" title="${k} ${c[k]}"></span>`).join('');
+  const tags = t.features.length ? t.features.map(f => `<span class="tag">${esc(f)}</span>`).join('') : '<span class="tag none">なし</span>';
+  el.innerHTML = `
+    <div class="shot"></div>
+    <div class="meta">
+      <div class="meta-row"><div class="name">${esc(t.name)}<span class="page-kind">${esc(t.page)}</span></div><div class="swatches">${sw}</div></div>
+      <div class="meta-row"><div class="tags">${tags}</div><div class="size">LYN ${fmt(t.src.length)}字</div></div>
+    </div>
+    <a class="card-link" href="#${t.id}"><span>${esc(t.name)} ${esc(t.page)} を開く</span></a>`;
+  const f = document.createElement('iframe');
+  f.setAttribute('sandbox', 'allow-scripts');
+  f.setAttribute('tabindex', '-1');
+  f.setAttribute('aria-hidden', 'true');
+  f.title = `${t.name} ${t.page} の見取り図`;
+  f.width = 1280; f.height = 960;
+  f.srcdoc = frameDoc(t.src, { vh: 960 });
+  const shot = el.querySelector('.shot');
+  shot.appendChild(f);
+  thumbObserver.observe(shot);
+  return el;
+}
+
+let filter = 'すべて';
+function drawFilters() {
+  const box = document.getElementById('filters');
+  box.innerHTML = '';
+  for (const f of ['すべて', ...ALL_FEATURES]) {
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'chip-btn'; b.textContent = f;
+    b.setAttribute('aria-pressed', String(f === filter));
+    b.addEventListener('click', () => { filter = f; drawFilters(); applyFilter(); });
+    box.appendChild(b);
+  }
+}
+function applyFilter() {
+  let shown = 0;
+  for (const el of grid.children) {
+    const ok = filter === 'すべて' || el.dataset.features.split(',').includes(filter);
+    el.hidden = !ok; if (ok) shown++;
+  }
+  document.getElementById('empty').hidden = shown > 0;
+}
+
+/* ---------- 詳細 ---------- */
+const dlg = document.getElementById('detail');
+const srcBox = document.getElementById('src');
+const stageFrame = document.getElementById('stage-frame');
+const stage = document.getElementById('stage');
+let current = null, width = 1280, names = false, frameH = 960, live = null, timer = 0;
+
+function fit() {
+  if (!live) return;
+  const avail = stage.clientWidth - 28;
+  const s = Math.min(1, avail / width);
+  live.style.transform = `scale(${s})`;
+  live.style.width = width + 'px';
+  live.style.height = frameH + 'px';
+  stageFrame.style.width = Math.round(width * s) + 'px';
+  stageFrame.style.height = Math.round(frameH * s) + 'px';
+}
+function drawDetail() {
+  const vh = width === 1280 ? 960 : 844;
+  frameH = vh;
+  const f = document.createElement('iframe');
+  f.setAttribute('sandbox', 'allow-scripts');
+  f.title = '見取り図の拡大';
+  f.srcdoc = frameDoc(srcBox.value, { vh, names });
+  stageFrame.replaceChildren(f);
+  live = f;
+  fit();
+  const ast = parseLyn(srcBox.value);
+  const ul = document.getElementById('d-unknowns');
+  ul.innerHTML = ast.meta.unknown.map(u => `<li>${esc(u)}</li>`).join('');
+  document.getElementById('unknown-box').hidden = !ast.meta.unknown.length;
+}
+window.addEventListener('message', e => {
+  if (live && e.source === live.contentWindow && e.data && e.data.lyn === 'h') {
+    frameH = Math.max(e.data.h, 200);
+    fit();
+  }
+});
+new ResizeObserver(fit).observe(stage);
+
+function open(id) {
+  const t = THEMES.find(x => x.id === id);
+  if (!t) return;
+  current = t;
+  document.getElementById('d-title').textContent = `${t.name} · ${t.page}`;
+  document.getElementById('d-features').innerHTML = t.features.length ? t.features.map(f => `<span class="tag">${esc(f)}</span>`).join('') : '<span class="tag none">なし</span>';
+  document.getElementById('d-note').textContent = t.note || '';
+  srcBox.value = t.src;
+  document.getElementById('status').textContent = '';
+  if (!dlg.open) dlg.showModal();
+  drawDetail();
+}
+function closeDetail() {
+  if (dlg.open) dlg.close();
+}
+dlg.addEventListener('close', () => {
+  if (dlg.open) return;
+  live = null; stageFrame.replaceChildren();
+  if (location.hash) history.replaceState(null, '', location.pathname + location.search);
+});
+document.getElementById('close').addEventListener('click', closeDetail);
+dlg.addEventListener('click', e => { if (e.target === dlg) closeDetail(); });
+
+function setWidth(w) {
+  width = w;
+  document.getElementById('w-pc').setAttribute('aria-pressed', String(w === 1280));
+  document.getElementById('w-sp').setAttribute('aria-pressed', String(w === 390));
+  drawDetail();
+}
+document.getElementById('w-pc').addEventListener('click', () => setWidth(1280));
+document.getElementById('w-sp').addEventListener('click', () => setWidth(390));
+document.getElementById('names').addEventListener('click', e => {
+  names = !names; e.currentTarget.setAttribute('aria-pressed', String(names)); drawDetail();
+});
+srcBox.addEventListener('input', () => {
+  clearTimeout(timer);
+  document.getElementById('status').textContent = '描き直し中…';
+  timer = setTimeout(() => { drawDetail(); document.getElementById('status').textContent = `${fmt(srcBox.value.length)}字`; }, 450);
+});
+document.getElementById('reset').addEventListener('click', () => {
+  if (!current) return;
+  srcBox.value = current.src; drawDetail();
+  document.getElementById('status').textContent = '元のLYNに戻しました';
+});
+document.getElementById('copy').addEventListener('click', () => {
+  const done = () => { document.getElementById('status').textContent = 'コピーしました'; };
+  try {
+    navigator.clipboard.writeText(srcBox.value).then(done, () => { srcBox.select(); document.getElementById('status').textContent = '選択しました。コピーしてください'; });
+  } catch (err) { srcBox.select(); document.getElementById('status').textContent = '選択しました。コピーしてください'; }
+});
+
+function route() {
+  const id = location.hash.slice(1);
+  if (THEMES.some(t => t.id === id)) open(id); else closeDetail();
+}
+window.addEventListener('hashchange', route);
+
+stats();
+drawFilters();
+for (const t of THEMES) grid.appendChild(card(t));
+applyFilter();
+route();
+</script>
+
+</body>
+</html>
