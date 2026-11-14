@@ -17,6 +17,8 @@ page (w-4/5 mx-auto bg-c-base)
 
 画面の構造と最小限の見た目（3色とフォント）だけを書き、細かい見た目は実装側に任せます。画面キャプチャより少ない量で、構造・配色・重なりを正確にAIへ伝えられます。
 
+**[LYN Playground](https://benridane.github.io/lyn/)** で、例を図にして見たり、LYNを書いてその場で描いたりできます。
+
 ## ファイル
 
 | パス | 内容 |
@@ -26,7 +28,8 @@ page (w-4/5 mx-auto bg-c-base)
 | `examples/` | レイアウトの例（7つ） |
 | `tools/html2lyn.py` | Tailwindで書かれたHTMLからLYNの下書きを作るスクリプト |
 | `skills/html-to-lyn/` | HTMLをLYNに変換するためのスキル |
-| `catalog/` | LYNから見取り図を描くテーマカタログ（`index.html` は生成物） |
+| `playground/` | LYNから見取り図を描くページのひな形 |
+| `docs/` | GitHub Pagesで公開するPlayground（`index.html` は生成物） |
 
 ## 使い方
 
@@ -40,13 +43,13 @@ python3 tools/html2lyn.py page.html > page.lyn
 
 ## 生成物の更新
 
-`examples/` や `tools/html2lyn.py` を変えたら、次を実行してカタログとスキルを作り直します。
+`examples/` や `tools/html2lyn.py` を変えたら、次を実行してPlaygroundとスキルを作り直します。
 
 ```sh
 python3 tools/build.py
 ```
 
-- `catalog/index.html` に `examples/` のLYNを埋め込みます
+- `docs/index.html` に `examples/` のLYNを埋め込みます
 - `skills/html-to-lyn/SKILL.md` の同梱スクリプトを `tools/html2lyn.py` と同じ内容にします
 
 ## ライセンス

@@ -1,4 +1,4 @@
-<title>LYN テーマカタログ</title>
+<title>LYN Playground</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@500;700&family=Noto+Sans+JP:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap">
@@ -40,7 +40,10 @@ h1 { font-family: var(--font-display); font-weight: 700; font-size: clamp(28px, 
 .stats { display: flex; flex-wrap: wrap; gap: 6px 18px; font-family: var(--font-mono); font-size: 12.5px; color: var(--muted); font-variant-numeric: tabular-nums; }
 .stats b { color: var(--ink); font-weight: 600; }
 
-.filters { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 22px; }
+.bar { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; margin: 0 0 22px; }
+.filters { display: flex; flex-wrap: wrap; gap: 8px; }
+a.btn { text-decoration: none; display: inline-flex; align-items: center; }
+.new-btn { padding: 9px 16px; font-size: 14px; }
 .chip-btn {
   font: 500 13px/1 var(--font-body); color: var(--ink); background: var(--surface); border: 1px solid var(--line);
   border-radius: 999px; padding: 8px 14px; cursor: pointer;
@@ -106,19 +109,22 @@ textarea#src {
 
 <div class="wrap">
   <header class="top">
-    <div class="eyebrow">LYN v0.7 · Layout patterns</div>
-    <h1>LYN テーマカタログ</h1>
-    <p class="lead">テーマの構造をLYN（レイアウト記法）で書き、そこから自動で描いた見取り図です。画像は使っていません。カードを開くとLYNを編集でき、図がその場で描き直されます。</p>
+    <div class="eyebrow">LYN v0.7 · 見本と試し書き</div>
+    <h1>LYN Playground</h1>
+    <p class="lead">LYNは、インデントの木構造でレイアウトを書くテキスト記法です。ここではLYNから自動で見取り図を描きます。例を開いて書き換えるか、新しく書くと、図がその場で描き直されます。画像は使っていません。</p>
     <div class="stats" id="stats"></div>
   </header>
 
-  <div class="filters" id="filters" role="group" aria-label="特徴で絞り込む"></div>
+  <div class="bar">
+    <div class="filters" id="filters" role="group" aria-label="特徴で絞り込む"></div>
+    <a class="btn primary new-btn" href="#new">新しく書く</a>
+  </div>
   <div class="grid" id="grid"></div>
   <p class="empty" id="empty" hidden>この特徴を持つレイアウトはまだありません。</p>
 
   <footer class="note">
     <div>寸法はLYNに書かれていないため、一般的な値で補って描いています。配色はどれも例です。</div>
-    <div>LYNの仕様と、ここに載せたレイアウトのソースは、リポジトリの <code>LYN-spec.md</code> と <code>examples/</code> にあります。</div>
+    <div>仕様（<code>LYN-spec.md</code>）と例のソース（<code>examples/</code>）は <a href="https://github.com/benridane/lyn" target="_blank" rel="noopener">github.com/benridane/lyn</a> にあります。MITライセンスです。</div>
   </footer>
 </div>
 
@@ -479,7 +485,7 @@ ${cssFor(tokens)}
 </style></head><body class="${names ? 'names' : ''}">${body}<script>${FRAME_JS}${close}</body></html>`;
 }
 
-/* ---------- カタログ ---------- */
+/* ---------- 一覧 ---------- */
 const THEMES = [
   { id: 'portrait', name: 'Portrait', page: 'トップ', features: ['サイトアイコン', 'カバー写真', '重なり'] },
   { id: 'signboard', name: 'Signboard', page: 'トップ', features: ['カバー写真', 'サイドバー', '重なり'] },
@@ -489,6 +495,26 @@ const THEMES = [
   { id: 'nocturne', name: 'Nocturne', page: 'トップ', features: ['サイトアイコン', 'カバー写真'] },
   { id: 'nocturne-post', name: 'Nocturne', page: '記事ページ', features: ['サイドバー'], note: 'サイドバーの位置（本文の右か下か）は決めていないため、本文の下に並べています。' },
 ];
+const STARTER = `# LYN v0.7（仕様: LYN-spec.md）
+@color base=#ffffff main=#2753b8
+page (flex flex-col)
+  header (flex justify-between items-center)
+    logo (text-xl font-bold) "サイト名"
+    nav (flex gap-6 text-sm) "HOME" "ABOUT" "CONTACT"
+  cover (w-full h-[35vh])  # カバー写真
+  main (grid grid-cols-[2fr_1fr] gap-8 p-6 max-md:grid-cols-1)
+    slot "本文"
+    aside (flex flex-col gap-4)
+      widget
+        heading (text-c-main) "記事一覧"
+        list > item*5 (border-b)
+      search
+  footer (border-t)
+    text "Copyright"
+`;
+const NEW_DOC = { id: 'new', name: '新しいLYN', page: '', features: null, note: 'このページの中だけで動き、書いた内容はどこにも送られません。下書きはこのブラウザに残ります。持ち帰るときはコピーしてください。', src: STARTER };
+function draftGet() { try { return localStorage.getItem('lyn-draft'); } catch (e) { return null; } }
+function draftSet(v) { try { localStorage.setItem('lyn-draft', v); } catch (e) { /* 保存できない環境では何もしない */ } }
 const ALL_FEATURES = ['サイトアイコン', 'カバー写真', 'ロゴ画像', 'サイドバー', '重なり'];
 for (const t of THEMES) {
   t.src = document.getElementById('lyn-' + t.id).textContent.replace(/^\n/, '');
@@ -500,9 +526,8 @@ const fmt = n => n.toLocaleString('ja-JP');
 
 function stats() {
   const total = THEMES.reduce((a, t) => a + t.src.length, 0);
-  const themes = new Set(THEMES.map(t => t.name)).size;
   document.getElementById('stats').innerHTML =
-    `<span><b>${THEMES.length}</b> レイアウト</span><span><b>${themes}</b> テーマ</span><span>LYN 平均 <b>${fmt(Math.round(total / THEMES.length))}</b> 字</span><span>画像 <b>0</b> 枚</span>`;
+    `<span><b>${THEMES.length}</b> レイアウト</span><span>LYN 平均 <b>${fmt(Math.round(total / THEMES.length))}</b> 字</span><span>画像 <b>0</b> 枚</span>`;
 }
 
 const thumbObserver = new ResizeObserver(entries => {
@@ -601,13 +626,14 @@ window.addEventListener('message', e => {
 new ResizeObserver(fit).observe(stage);
 
 function open(id) {
-  const t = THEMES.find(x => x.id === id);
+  const t = id === 'new' ? NEW_DOC : THEMES.find(x => x.id === id);
   if (!t) return;
   current = t;
-  document.getElementById('d-title').textContent = `${t.name} · ${t.page}`;
-  document.getElementById('d-features').innerHTML = t.features.length ? t.features.map(f => `<span class="tag">${esc(f)}</span>`).join('') : '<span class="tag none">なし</span>';
+  document.getElementById('d-title').textContent = t.page ? `${t.name} · ${t.page}` : t.name;
+  document.getElementById('features-box').hidden = !t.features;
+  if (t.features) document.getElementById('d-features').innerHTML = t.features.length ? t.features.map(f => `<span class="tag">${esc(f)}</span>`).join('') : '<span class="tag none">なし</span>';
   document.getElementById('d-note').textContent = t.note || '';
-  srcBox.value = t.src;
+  srcBox.value = t.id === 'new' ? (draftGet() || t.src) : t.src;
   document.getElementById('status').textContent = '';
   if (!dlg.open) dlg.showModal();
   drawDetail();
@@ -637,12 +663,17 @@ document.getElementById('names').addEventListener('click', e => {
 srcBox.addEventListener('input', () => {
   clearTimeout(timer);
   document.getElementById('status').textContent = '描き直し中…';
-  timer = setTimeout(() => { drawDetail(); document.getElementById('status').textContent = `${fmt(srcBox.value.length)}字`; }, 450);
+  timer = setTimeout(() => {
+    drawDetail();
+    if (current && current.id === 'new') draftSet(srcBox.value);
+    document.getElementById('status').textContent = `${fmt(srcBox.value.length)}字`;
+  }, 450);
 });
 document.getElementById('reset').addEventListener('click', () => {
   if (!current) return;
   srcBox.value = current.src; drawDetail();
-  document.getElementById('status').textContent = '元のLYNに戻しました';
+  if (current.id === 'new') draftSet(current.src);
+  document.getElementById('status').textContent = current.id === 'new' ? '書き始めの状態に戻しました' : '元のLYNに戻しました';
 });
 document.getElementById('copy').addEventListener('click', () => {
   const done = () => { document.getElementById('status').textContent = 'コピーしました'; };
@@ -653,7 +684,7 @@ document.getElementById('copy').addEventListener('click', () => {
 
 function route() {
   const id = location.hash.slice(1);
-  if (THEMES.some(t => t.id === id)) open(id); else closeDetail();
+  if (id === 'new' || THEMES.some(t => t.id === id)) open(id); else closeDetail();
 }
 window.addEventListener('hashchange', route);
 

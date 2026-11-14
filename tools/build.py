@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """生成物を作り直す。
 
-1. examples/*.lyn を catalog/template.html に埋め込み、catalog/index.html を作る
+1. examples/*.lyn を playground/template.html に埋め込み、docs/index.html（GitHub Pages）を作る
 2. tools/html2lyn.py を skills/html-to-lyn/SKILL.md の同梱スクリプト欄に写す
 
 使い方: python3 tools/build.py
@@ -11,19 +11,19 @@ import re
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 
-# カタログに載せる順番（ファイル名 → カタログ上の ID）
-CATALOG = [('portrait', 'portrait'), ('signboard', 'signboard'), ('magazine', 'magazine'), ('newsroom', 'newsroom'),
-           ('mosaic', 'mosaic'), ('nocturne-home', 'nocturne'), ('nocturne-post', 'nocturne-post')]
+# Playground に載せる順番（ファイル名 → ページ上の ID）
+EXAMPLES = [('portrait', 'portrait'), ('signboard', 'signboard'), ('magazine', 'magazine'), ('newsroom', 'newsroom'),
+            ('mosaic', 'mosaic'), ('nocturne-home', 'nocturne'), ('nocturne-post', 'nocturne-post')]
 
 
-def build_catalog():
-    template = (ROOT / 'catalog' / 'template.html').read_text(encoding='utf-8')
+def build_playground():
+    template = (ROOT / 'playground' / 'template.html').read_text(encoding='utf-8')
     blocks = []
-    for file_id, catalog_id in CATALOG:
+    for file_id, page_id in EXAMPLES:
         src = (ROOT / 'examples' / f'{file_id}.lyn').read_text(encoding='utf-8')
         if '</script' in src.lower():
             raise SystemExit(f'{file_id}.lyn に </script が含まれています')
-        blocks.append(f'<script type="text/plain" id="lyn-{catalog_id}">\n{src}</script>')
+        blocks.append(f'<script type="text/plain" id="lyn-{page_id}">\n{src}</script>')
     page = template.replace('<!--LYN_SOURCES-->', '\n'.join(blocks))
     title_end = page.index('</title>') + len('</title>')
     style_end = page.index('</style>') + len('</style>')
@@ -31,8 +31,9 @@ def build_catalog():
     out = ('<!doctype html>\n<html lang="ja">\n<head>\n<meta charset="utf-8">\n'
            '<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n'
            + page[:style_end] + '\n</head>\n<body>\n' + page[style_end:].lstrip() + '\n</body>\n</html>\n')
-    (ROOT / 'catalog' / 'index.html').write_text(out, encoding='utf-8')
-    print('catalog/index.html')
+    (ROOT / 'docs').mkdir(exist_ok=True)
+    (ROOT / 'docs' / 'index.html').write_text(out, encoding='utf-8')
+    print('docs/index.html')
 
 
 def sync_skill():
@@ -48,5 +49,5 @@ def sync_skill():
 
 
 if __name__ == '__main__':
-    build_catalog()
+    build_playground()
     sync_skill()
